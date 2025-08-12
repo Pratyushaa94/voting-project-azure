@@ -49,7 +49,7 @@ jobs:
 
       ### REQUIRED 
       ### A list of the account/repo names for docker build. List should match what's enabled above
-      ### defaults to:
+      ### default to:
       image-names: |
                 ghcr.io/Pratyushaa94/example-voting-app-result
                 Pratyushaa94/examplevotingapp_result
