@@ -56,14 +56,14 @@ jobs:
       - name: Create tfstate backend
         run: |
           az group create --name rg-tfstate --location eastus
-          az storage account create --name tfstatesaazureproject123${{ env.ENV }} --resource-group rg-tfstate --location eastus --sku Standard_LRS
-          az storage container create --name tfstate --account-name tfstatesa-azure-project123${{ env.ENV }}
+          az storage account create --name tfstateproj123${{ env.ENV }} --resource-group rg-tfstate --location eastus --sku Standard_LRS
+          az storage container create --name tfstate --account-name tfstateproj123${{ env.ENV }}
 
       - name: Terraform Init
         run: |
           terraform init \
             -backend-config="resource_group_name=rg-tfstate" \
-            -backend-config="storage_account_name=tfstatesaazureproject123${{ env.ENV }} \
+            -backend-config="storage_account_name=tfstateproj123${{ env.ENV }}" \
             -backend-config="container_name=tfstate" \
             -backend-config="key=terraform.tfstate"
 
