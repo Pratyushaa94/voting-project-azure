@@ -45,7 +45,7 @@ jobs:
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-         
+
       - name: Export ARM environment variables
         run: |
           echo "ARM_CLIENT_ID=${{ fromJson(secrets.AZURE_CREDENTIALS).clientId }}" >> $GITHUB_ENV
@@ -73,7 +73,7 @@ jobs:
       - name: Terraform Plan
         id: tfplan
         run: |
-          terraform plan -var-file="${{ env.ENV }}.tfvars" -out=tfplan.binary
+          terraform plan -var-file="environments/${{ env.ENV }}.tfvars" -out=tfplan.binary
           terraform show -json tfplan.binary > plan.json
           echo "plan_created=true" >> $GITHUB_OUTPUT
 
@@ -106,14 +106,13 @@ jobs:
       - name: Show Infracost report
         run: |
           echo "INFO: Infracost cost breakdown report:"
-          cat infracost-report.txt
+          cat terraform-aks/infracost-report.txt
 
   apply:
     name: Terraform Apply with Approval
     needs: plan
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.confirm_apply == 'yes'
-
     environment: ${{ github.event.inputs.environment || 'dev' }}
     defaults:
       run:
@@ -150,7 +149,7 @@ jobs:
         run: |
           terraform init \
             -backend-config="resource_group_name=rg-tfstate" \
-            -backend-config="storage_account_name=tfstatesa${{ github.event.inputs.environment || 'dev' }}" \
+            -backend-config="storage_account_name=tfstateproj123${{ github.event.inputs.environment || 'dev' }}" \
             -backend-config="container_name=tfstate" \
             -backend-config="key=terraform.tfstate"
 
