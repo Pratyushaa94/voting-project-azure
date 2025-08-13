@@ -1,5 +1,5 @@
 # Storage account for Terraform state
-storage_account_name = "tfstates-azure-project123"
+storage_account_name = "tfstatesa-azure-project123${{ env.ENV }}"
 container_name       = "tfstate"
 state_file           = "terraform.tfstate"
 
