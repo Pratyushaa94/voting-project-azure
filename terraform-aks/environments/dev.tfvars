@@ -1,5 +1,5 @@
 # Storage account for Terraform state
-storage_account_name = "tfstatestorageacctdev"
+storage_account_name = "tfstates-azure-project123"
 container_name       = "tfstate"
 state_file           = "terraform.tfstate"
 

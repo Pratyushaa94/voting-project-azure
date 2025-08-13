@@ -7,7 +7,7 @@ resource_group_name = "rg-prod-thara"
 location = "East US"
 
 # Storage account for backend state
-storage_account_name = "tfstatestorageacctprod"
+storage_account_name = "tfstates-azure-project123"
 
 # Container name inside the storage account
 container_name = "tfstate"
