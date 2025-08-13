@@ -1,15 +1,19 @@
-name: Terraform Azure Cosmos DB CI/CD
+name: Terraform Azure
 
 on:
   push:
     branches:
-      - main  # Change this from 'stage' to 'main'
+      - main
   workflow_dispatch:
     inputs:
       environment:
         description: "Target environment (dev or prod)"
         required: true
         default: "dev"
+        type: choice
+        options:
+        - dev
+        - prod
       confirm_apply:
         description: "Type 'yes' to apply resources"
         required: true
@@ -19,12 +23,12 @@ jobs:
   plan:
     name: Terraform Plan and Cost Estimate
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment ||'dev-plan'}}
+    environment: ${{ github.event.inputs.environment || 'dev-plan' }}
     env:
       ENV: ${{ github.event.inputs.environment || 'dev' }}
     defaults:
       run:
-        working-directory: terraform/environments/${{ env.ENV }}
+        working-directory: terraform-aks
     outputs:
       tfplan-exists: ${{ steps.tfplan.outputs.plan_created }}
 
@@ -69,7 +73,7 @@ jobs:
       - name: Terraform Plan
         id: tfplan
         run: |
-          terraform plan -var-file="terraform.tfvars" -out=tfplan.binary
+          terraform plan -var-file="${{ env.ENV }}.tfvars" -out=tfplan.binary
           terraform show -json tfplan.binary > plan.json
           echo "plan_created=true" >> $GITHUB_OUTPUT
 
@@ -78,8 +82,8 @@ jobs:
         with:
           name: tfplan-files
           path: |
-            terraform/environments/${{ env.ENV }}/tfplan.binary
-            terraform/environments/${{ env.ENV }}/plan.json
+            terraform-aks/tfplan.binary
+            terraform-aks/plan.json
 
       - name: Setup Infracost
         uses: infracost/actions/setup@v2.1.0
@@ -97,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: infracost-report
-          path: terraform/environments/${{ env.ENV }}/infracost-report.txt
+          path: terraform-aks/infracost-report.txt
 
       - name: Show Infracost report
         run: |
@@ -113,7 +117,7 @@ jobs:
     environment: ${{ github.event.inputs.environment || 'dev' }}
     defaults:
       run:
-        working-directory: terraform/environments/${{ github.event.inputs.environment || 'dev' }}
+        working-directory: terraform-aks
 
     steps:
       - name: Checkout code
@@ -140,7 +144,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tfplan-files
-          path: terraform/environments/${{ github.event.inputs.environment }}
+          path: terraform-aks
 
       - name: Terraform Init
         run: |
