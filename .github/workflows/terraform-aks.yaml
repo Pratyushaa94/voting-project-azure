@@ -3,7 +3,7 @@ name: Terraform Azure Cosmos DB CI/CD
 on:
   push:
     branches:
-      - stage
+      - main  # Change this from 'stage' to 'main'
   workflow_dispatch:
     inputs:
       environment:
