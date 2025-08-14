@@ -47,7 +47,7 @@ jobs:
       dockerhub-enable: true
       ghcr-enable: false
 
-      ### REQUIRED 
+      ### REQUIRED. 
       ### A list of the account/repo names for docker build. List should match what's enabled above
       ### defaults to:
       image-names: |

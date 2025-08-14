@@ -6,7 +6,7 @@ on:
   push:
     branches:
       - 'main'
-    # only build when important files change
+    # only build when important files change.
     paths:
       - 'result/**'
       - '.github/workflows/call-docker-build-result.yaml'
